@@ -1,0 +1,110 @@
+nmap scan on 14 servers
+
+┌──(root㉿kali)-[~/Downloads]
+└─# nmap -iL  targets.txt -sS    
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-09-26 10:00 AKDT
+Stats: 0:00:19 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 44.56% done; ETC: 10:01 (0:00:20 remaining)
+Stats: 0:00:20 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 44.59% done; ETC: 10:01 (0:00:21 remaining)
+sendto in send_ip_packet_sd: sendto(5, packet, 44, 0, 10.159.44.156, 16) => Network is unreachable
+Offending packet: TCP 192.168.110.128:46055 > 10.159.44.156:524 S ttl=42 id=30496 iplen=44  seq=2018293746 win=1024 <mss 1460>
+sendto in send_ip_packet_sd: sendto(5, packet, 44, 0, 10.159.44.156, 16) => Network is unreachable
+Offending packet: TCP 192.168.110.128:46057 > 10.159.44.156:524 S ttl=42 id=19548 iplen=44  seq=2018424816 win=1024 <mss 1460>
+Stats: 0:01:27 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 50.28% done; ETC: 10:03 (0:01:23 remaining)
+Stats: 0:05:07 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 54.13% done; ETC: 10:10 (0:04:17 remaining)
+Stats: 0:06:28 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 55.79% done; ETC: 10:12 (0:05:04 remaining)
+Stats: 0:09:41 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 89.53% done; ETC: 10:11 (0:01:08 remaining)
+Stats: 0:10:22 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 90.80% done; ETC: 10:12 (0:01:03 remaining)
+Stats: 0:11:53 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 93.03% done; ETC: 10:13 (0:00:53 remaining)
+Stats: 0:13:49 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 95.85% done; ETC: 10:15 (0:00:36 remaining)
+Stats: 0:14:44 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 97.15% done; ETC: 10:16 (0:00:26 remaining)
+Stats: 0:18:45 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 98.17% done; ETC: 10:20 (0:00:21 remaining)
+Stats: 0:23:46 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 99.39% done; ETC: 10:24 (0:00:09 remaining)
+Nmap scan report for 10.159.44.156
+Host is up (0.00041s latency).
+All 1000 scanned ports on 10.159.44.156 are in ignored states.
+Not shown: 755 filtered tcp ports (no-response), 245 closed tcp ports (reset)
+
+Nmap scan report for 10.161.59.68
+Host is up (0.00042s latency).
+All 1000 scanned ports on 10.161.59.68 are in ignored states.
+Not shown: 924 filtered tcp ports (no-response), 76 closed tcp ports (reset)
+
+Nmap scan report for 10.159.114.39
+Host is up (0.00089s latency).
+All 1000 scanned ports on 10.159.114.39 are in ignored states.
+Not shown: 747 filtered tcp ports (no-response), 253 closed tcp ports (reset)
+
+Nmap scan report for 5.194.202.142
+Host is up (0.00099s latency).
+Not shown: 730 filtered tcp ports (no-response), 268 closed tcp ports (reset)
+PORT     STATE SERVICE
+80/tcp   open  http
+8080/tcp open  http-proxy
+
+Nmap scan report for 10.159.44.153
+Host is up (0.00060s latency).
+All 1000 scanned ports on 10.159.44.153 are in ignored states.
+Not shown: 706 filtered tcp ports (no-response), 294 closed tcp ports (reset)
+
+Nmap scan report for 5.194.202.148
+Host is up (0.0018s latency).
+Not shown: 723 filtered tcp ports (no-response), 275 closed tcp ports (reset)
+PORT     STATE SERVICE
+80/tcp   open  http
+8080/tcp open  http-proxy
+
+Nmap scan report for 10.159.44.154
+Host is up (0.00083s latency).
+All 1000 scanned ports on 10.159.44.154 are in ignored states.
+Not shown: 745 filtered tcp ports (no-response), 255 closed tcp ports (reset)
+
+Nmap scan report for 5.194.202.140
+Host is up (0.00073s latency).
+Not shown: 929 filtered tcp ports (no-response), 69 closed tcp ports (reset)
+PORT     STATE SERVICE
+80/tcp   open  http
+8080/tcp open  http-proxy
+
+Nmap scan report for 10.159.114.40
+Host is up (0.00050s latency).
+All 1000 scanned ports on 10.159.114.40 are in ignored states.
+Not shown: 925 filtered tcp ports (no-response), 75 closed tcp ports (reset)
+
+Nmap scan report for 10.161.59.69
+Host is up (0.0014s latency).
+All 1000 scanned ports on 10.161.59.69 are in ignored states.
+Not shown: 739 filtered tcp ports (no-response), 261 closed tcp ports (reset)
+
+Nmap scan report for 5.211.4.253
+Host is up (0.00060s latency).
+All 1000 scanned ports on 5.211.4.253 are in ignored states.
+Not shown: 928 filtered tcp ports (no-response), 72 closed tcp ports (reset)
+
+Nmap scan report for 10.161.28.44
+Host is up (0.0010s latency).
+All 1000 scanned ports on 10.161.28.44 are in ignored states.
+Not shown: 740 filtered tcp ports (no-response), 260 closed tcp ports (reset)
+
+Nmap scan report for 10.159.44.155
+Host is up (0.00079s latency).
+All 1000 scanned ports on 10.159.44.155 are in ignored states.
+Not shown: 752 filtered tcp ports (no-response), 248 closed tcp ports (reset)
+
+Nmap scan report for 10.159.114.41
+Host is up (0.0010s latency).
+All 1000 scanned ports on 10.159.114.41 are in ignored states.
+Not shown: 759 filtered tcp ports (no-response), 241 closed tcp ports (reset)
+
+Nmap done: 14 IP addresses (14 hosts up) scanned in 1611.94 seconds

